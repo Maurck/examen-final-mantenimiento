@@ -4,6 +4,7 @@ import java.awt.event.MouseListener;
 import java.awt.Color;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
+import java.util.List;
 // -------------------------------------------------------------------------
 /**
  * The panel that represents the Chess game board. Contains a few methods that
@@ -73,8 +74,8 @@ public class ChessGameBoard extends JPanel{
      *
      * @return ArrayList<GamePiece> the pieces
      */
-    public ArrayList<ChessGamePiece> getAllWhitePieces(){
-        ArrayList<ChessGamePiece> whitePieces = new ArrayList<ChessGamePiece>();
+    public List<ChessGamePiece> getAllWhitePieces(){
+        ArrayList<ChessGamePiece> whitePieces = new ArrayList<>();
         for ( int i = 0; i < 8; i++ ){
             for ( int j = 0; j < 8; j++ ){
                 if ( chessCells[i][j].getPieceOnSquare() != null
@@ -92,8 +93,8 @@ public class ChessGameBoard extends JPanel{
      *
      * @return ArrayList<GamePiece> the pieces
      */
-    public ArrayList<ChessGamePiece> getAllBlackPieces(){
-        ArrayList<ChessGamePiece> blackPieces = new ArrayList<ChessGamePiece>();
+    public List<ChessGamePiece> getAllBlackPieces(){
+        ArrayList<ChessGamePiece> blackPieces = new ArrayList<>();
         for ( int i = 0; i < 8; i++ ){
             for ( int j = 0; j < 8; j++ ){
                 if ( chessCells[i][j].getPieceOnSquare() != null
@@ -148,8 +149,6 @@ public class ChessGameBoard extends JPanel{
             }
         }
         repaint();
-        //revalidate();
-        // only the combination of these two calls work...*shrug*
     }
     /**
      * (Re)initializes this ChessGameBoard to its default layout with all 32
@@ -172,39 +171,55 @@ public class ChessGameBoard extends JPanel{
                 {
                     int colNum =
                         i == 0 ? ChessGamePiece.BLACK : ChessGamePiece.WHITE;
-                    if ( j == 0 || j == 7 ){
-                        pieceToAdd = new Rook( this, i, j, colNum );
-                    }
-                    else if ( j == 1 || j == 6 ){
-                        pieceToAdd = new Knight( this, i, j, colNum );
-                    }
-                    else if ( j == 2 || j == 5 ){
-                        pieceToAdd = new Bishop( this, i, j, colNum );
-                    }
-                    else if ( j == 3 ){
-                        pieceToAdd = new King( this, i, j, colNum );
-                    }
-                    else
-                    {
-                        pieceToAdd = new Queen( this, i, j, colNum );
-                    }
+
+                    pieceToAdd = getPieceToAdd(i,j,colNum);
                 }
                 else
                 {
                     pieceToAdd = null;
                 }
-                chessCells[i][j] = new BoardSquare( i, j, pieceToAdd );
-                if ( ( i + j ) % 2 == 0 ){
-                    chessCells[i][j].setBackground( Color.WHITE );
-                }
-                else
-                {
-                    chessCells[i][j].setBackground( Color.BLACK );
-                }
-                chessCells[i][j].addMouseListener( listener );
-                this.add( chessCells[i][j] );
+
+                setBoardBackground(i, j, pieceToAdd);
+
             }
         }
+    }
+
+    public ChessGamePiece getPieceToAdd(int i, int j, int colNum){
+
+        ChessGamePiece pieceToAdd;
+
+        if ( j == 0 || j == 7 ){
+            pieceToAdd = new Rook( this, i, j, colNum );
+        }
+        else if ( j == 1 || j == 6 ){
+            pieceToAdd = new Knight( this, i, j, colNum );
+        }
+        else if ( j == 2 || j == 5 ){
+            pieceToAdd = new Bishop( this, i, j, colNum );
+        }
+        else if ( j == 3 ){
+            pieceToAdd = new King( this, i, j, colNum );
+        }
+        else
+        {
+            pieceToAdd = new Queen( this, i, j, colNum );
+        }
+
+        return pieceToAdd;
+    }
+
+    public void setBoardBackground(int i, int j, ChessGamePiece pieceToAdd){
+        chessCells[i][j] = new BoardSquare( i, j, pieceToAdd );
+        if ( ( i + j ) % 2 == 0 ){
+            chessCells[i][j].setBackground( Color.WHITE );
+        }
+        else
+        {
+            chessCells[i][j].setBackground( Color.BLACK );
+        }
+        chessCells[i][j].addMouseListener( listener );
+        this.add( chessCells[i][j] );
     }
     // ----------------------------------------------------------
     /**

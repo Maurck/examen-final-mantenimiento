@@ -1,7 +1,7 @@
-import java.util.ArrayList;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import java.awt.event.MouseEvent;
+import java.util.List;
 // -------------------------------------------------------------------------
 /**
  * This is the backend behind the Chess game. Handles the turn-based aspects of
@@ -83,7 +83,7 @@ public class ChessGameEngine{
      * @return boolean true if the player does have legal moves, false otherwise
      */
     public boolean playerHasLegalMoves( int playerNum ){
-        ArrayList<ChessGamePiece> pieces;
+        List<ChessGamePiece> pieces;
         if ( playerNum == 1 ){
             pieces = board.getAllWhitePieces();
         }
@@ -113,18 +113,12 @@ public class ChessGameEngine{
         }
         if ( currentPlayer == 2 ) // black player
         {
-            if ( currentPiece.getColorOfPiece() == ChessGamePiece.BLACK ){
-                return true;
-            }
-            return false;
+            return currentPiece.getColorOfPiece() == ChessGamePiece.BLACK;
         }
         else
         // white player
         {
-            if ( currentPiece.getColorOfPiece() == ChessGamePiece.WHITE ){
-                return true;
-            }
-            return false;
+            return currentPiece.getColorOfPiece() == ChessGamePiece.WHITE;
         }
     }
     /**
@@ -167,7 +161,6 @@ public class ChessGameEngine{
         else
         {
             board.resetBoard( false );
-            // System.exit(0);
         }
     }
     /**
@@ -275,38 +268,38 @@ public class ChessGameEngine{
         }
         else
         {
-            if ( pieceOnSquare == null ||
+            handleNotFirstClick(pieceOnSquare, squareClicked);
+        }
+    }
+
+    public void handleNotFirstClick(ChessGamePiece pieceOnSquare, BoardSquare squareClicked){
+        if ( pieceOnSquare == null ||
                 !pieceOnSquare.equals( currentPiece ) ) // moving
-            {
-                boolean moveSuccessful =
+        {
+            boolean moveSuccessful =
                     currentPiece.move(
-                        board,
-                        squareClicked.getRow(),
-                        squareClicked.getColumn() );
-                if ( moveSuccessful ){
-                    checkGameConditions();
-                }
-                else
-                {
-                    int row = squareClicked.getRow();
-                    int col = squareClicked.getColumn();
-                    JOptionPane.showMessageDialog(
-                        squareClicked,
-                        "The move to row " + ( row + 1 ) + " and column "
-                            + ( col + 1 )
-                            + " is either not valid or not legal "
-                            + "for this piece. Choose another move location, "
-                            + "and try using your brain this time!",
-                        "Invalid move",
-                        JOptionPane.ERROR_MESSAGE );
-                }
-                firstClick = true;
+                            board,
+                            squareClicked.getRow(),
+                            squareClicked.getColumn() );
+            if ( moveSuccessful ){
+                checkGameConditions();
             }
             else
-            // user is just unselecting the current piece
             {
-                firstClick = true;
+                int row = squareClicked.getRow();
+                int col = squareClicked.getColumn();
+                JOptionPane.showMessageDialog(
+                        squareClicked,
+                        "The move to row " + ( row + 1 ) + " and column "
+                                + ( col + 1 )
+                                + " is either not valid or not legal "
+                                + "for this piece. Choose another move location, "
+                                + "and try using your brain this time!",
+                        "Invalid move",
+                        JOptionPane.ERROR_MESSAGE );
             }
         }
+        // user is just unselecting the current piece
+        firstClick = true;
     }
 }

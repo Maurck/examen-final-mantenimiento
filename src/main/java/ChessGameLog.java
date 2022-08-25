@@ -1,5 +1,4 @@
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import java.util.Date;
 // -------------------------------------------------------------------------
 /**
@@ -21,8 +20,8 @@ public class ChessGameLog
     public ChessGameLog(){
         super(
             new JTextArea( "", 5, 30 ),
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-            JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
         textArea = ( (JTextArea)this.getViewport().getView() );
     }
     // ----------------------------------------------------------
